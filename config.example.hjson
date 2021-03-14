@@ -26,6 +26,10 @@
 		redirectPort: 80// Required if setting above is true. Set to the port you want to redirect HTTP to HTTPS from (Default: 80). 
 	}
 	useSSL: false// If you want your pad to be accesible over HTTPS set SSL to true and add the path of your certificates
+	bugtracker: false //Enables /bugs command to link to a site, false to disable
+	loungeURL: false //Allows customising the lounge page to a custom url, false to disable
+	rulesURL: false //Enables /rules command to link to a site, false to disable
+	themeURL: false //Enables /theme command to link to a site, false to disable
 	certificate: {
 		key: "path-to-key"
 		cert: "path-to-cert"

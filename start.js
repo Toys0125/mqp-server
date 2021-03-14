@@ -35,7 +35,11 @@ const webConfig = `// THIS IS AN AUTOMATICALLY GENERATED FILE\n\nvar config=JSON
   useSSL: nconf.get('useSSL'),
   serverPort: nconf.get('socketServer:port'),
   selfHosted: !0,
-  serverHost: nconf.get('socketServer:host')
+  serverHost: nconf.get('socketServer:host'),
+  bugtracker: nconf.get('bugtracker'),
+  loungeURL: nconf.get('loungeURL'),
+  themeURL: nconf.get('themeURL'),
+  rulesURL: nconf.get('rulesURL')
 })}')`;
 
 if (nconf.get('hostWebserver')) {
