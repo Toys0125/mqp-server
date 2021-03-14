@@ -46,6 +46,8 @@ app.use(compression());
 app.use(helmet.frameguard());
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts());
+app.use(helmet.noSniff());
 
 app.get(['/', '/index.html'], (req, res) => {
 	res.render('index', {

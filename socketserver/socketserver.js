@@ -231,8 +231,8 @@ var SocketServer = function(server){
 		}
 	}, 6000);
 
-	this.wss.on("connection", function(socket){
-		var ip = (socket.upgradeReq.headers['x-forwarded-for'] || socket.upgradeReq.connection.remoteAddress);
+	this.wss.on("connection", function(socket, http){
+		var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
 
 		log.info(ip + ' connected');
 
@@ -297,7 +297,7 @@ var SocketServer = function(server){
 		that.unauthdSockets.add(socket);
 
 		socket.on("close", function(){
-			var ip = (socket.upgradeReq.headers['x-forwarded-for'] || socket.upgradeReq.connection.remoteAddress);
+			var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
 
 			log.info(ip + ' disconnected');
 			if(socket.user){
@@ -309,7 +309,7 @@ var SocketServer = function(server){
 
 
 		socket.on("message", function(data, flags){
-			var ip = (socket.upgradeReq.headers['x-forwarded-for'] || socket.upgradeReq.connection.remoteAddress);
+			var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
 
 			log.debug(ip + " sent: " + data);
 
@@ -1356,7 +1356,7 @@ var SocketServer = function(server){
 						}
 						
 						//Log user's IP address
-						var ip = (socket.upgradeReq.headers['x-forwarded-for'] || socket.upgradeReq.connection.remoteAddress);
+						var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
 						DB.logIp(ip, user.uid);
 
 						returnObj.data = {
@@ -1392,7 +1392,7 @@ var SocketServer = function(server){
 									form: {
 										secret: nconf.get('apis:reCaptcha:secret'),
 										response: data.data.captcha,
-										remoteip: socket.upgradeReq.connection.remoteAddress,
+										remoteip: http.socket.remoteAddress,
 									}
 								},
 								function (error, response, body) {

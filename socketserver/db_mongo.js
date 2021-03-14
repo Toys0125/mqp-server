@@ -248,12 +248,12 @@ function initCollections(callback) {
 function MongoDB(cb) {
     const dburl = `mongodb://${nconf.get('db:mongoUser')}:${nconf.get('db:mongoPassword')}@${nconf.get('db:mongoHost')}:27017/${nconf.get('db:mongoDatabase')}`;
 
-    mongodb.connect(dburl, function (err, database) {
+    mongodb.connect(dburl, function (err, client) {
         if (err) {
             throw new Error(`Could not connect to database: ${err}`);
         }
 
-        db = database;
+        db = client.db();
 
         createCollectionsIfNoExist(() => {
             initCollections(() => {
@@ -286,7 +286,9 @@ MongoDB.prototype.getPlaylist = function (pid, callback) {
         playlistscol.findOne({
             _id: pid
         }, {
-            _id: 0
+            projection: {
+                _id: 0
+            }
         }, function (err, data) {
             if (err || !data) {
                 callback('PlaylistNotFound');
@@ -359,7 +361,9 @@ MongoDB.prototype.getRoom = function (slug, callback) {
         roomcol.findOne({
             slug
         }, {
-            _id: 0
+            projection: {
+                _id: 0
+            }
         }, callback);
     });
     return this;
@@ -472,23 +476,23 @@ MongoDB.prototype.createUser = function (obj, callback) {
 MongoDB.prototype.loginUser = function (email, callback) {
 	if (email) {
 		email = email.toLowerCase();
-		dbQueue(() => {
-			userscol.findOne({ email }, { _id: 0 }, (err, data) => {
-				if (err) {
-					callback(err);
-					return;
-				}
-				if (!data) {
-					callback('UserNotFound');
-					return;
-				}
+        dbQueue(() => {
+            userscol.findOne({ email }, { projection: { _id: 0 } }, (err, data) => {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                if (!data) {
+                    callback('UserNotFound');
+                    return;
+                }
 
-				const user = new User();
-				user.login(email, data, () => {
-					callback(null, user, email);
-				});
-			});
-		});
+                const user = new User();
+                user.login(email, data, () => {
+                    callback(null, user, email);
+                });
+            });
+        });
 	}
 };
 
@@ -514,7 +518,9 @@ MongoDB.prototype.getUser = function (email, callback) {
         userscol.findOne({
             email
         }, {
-            _id: 0
+            projection: {
+                _id: 0
+            }
         }, function (err, data) {
             if (err) {
                 callback(err);
@@ -582,7 +588,7 @@ MongoDB.prototype.getUserByUid = function (uid, opts, callback) {
             _id: {
                 $in: uid
             }
-        }, {
+        }).project({
             _id: 0
         }).toArray(function (err, data) {
             if (err || !data || data.length == 0) {
@@ -620,7 +626,9 @@ MongoDB.prototype.getUserByName = function (name, opts, callback) {
         userscol.findOne({
             un: name
         }, {
-            _id: 0
+            projection: {
+                _id: 0
+            }
         }, function (err, userobj) {
             if (err || !userobj) {
                 if (callback) callback('UserNotFound');
@@ -641,7 +649,9 @@ MongoDB.prototype.userEmailExists = function (key, callback) {
         userscol.findOne({
             email: key
         }, {
-            _id: 0
+            projection: {
+                _id: 0
+            }
         }, function (err, data) {
             if (callback) callback(err, data ? true : false);
         });
@@ -693,7 +703,7 @@ MongoDB.prototype.getConversation = function (from, to, callback) {
                 from: to,
                 to: from
             }]
-        }, {
+        }).project({
             _id: 0
         }).toArray(function (err, data) {
             if (err) {
@@ -723,7 +733,7 @@ MongoDB.prototype.getConversations = function (uid, callback) {
             }, {
                 to: uid
             }]
-        }, {
+        }).project({
             _id: 0
         }).toArray(function (err, data) {
             if (err) {
@@ -804,7 +814,7 @@ MongoDB.prototype.getIpHistory = function (uid, callback) {
     dbQueue(function () {
         ipcol.find({
             uid
-        }, {
+        }).project({
             _id: 0,
             uid: 0
         }).toArray(function (err, data) {

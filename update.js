@@ -31,15 +31,22 @@ module.exports = function update() {
       'User-Agent': 'request',
     },
   };
-  request(options, function (err, res, data) {
+  request(options, async function (err, res, data) {
     if (!err && res.statusCode == 200) {
-      yesno.ask('This will overide all existing code exept new files and modules. Do you want to continue? (y/N)', false, function (ok) {
+      /*yesno.ask('This will overide all existing code exept new files and modules. Do you want to continue? (y/N)', false, function (ok) {
         if (ok) {
           console.log('Now updating to latest version (' + JSON.parse(data).tag_name + ')!');
           download(JSON.parse(data).tag_name);
         } else
           process.exit();
-      });
+      });*/
+      const ok = await yesno({ question: 'This will overide all existing code exept new files and modules. Do you want to continue? (y/N)', defaultValue: false });
+      if (ok) {
+        console.log('Now updating to latest version (' + JSON.parse(data).tag_name + ')!');
+        download(JSON.parse(data).tag_name);
+      } else {
+        process.exit();
+      }
     } else
       console.log('Error getting the latest musiqpad version: ' + err);
   });

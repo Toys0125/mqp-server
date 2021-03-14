@@ -1,6 +1,6 @@
 'use strict';
 // Modules
-const levelup = require('levelup');
+const levelup = require('level');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
