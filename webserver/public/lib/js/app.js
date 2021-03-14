@@ -2194,7 +2194,45 @@
 					MP.api.chat.log(arr.shift());
 				},
 			},
-
+			debug: {
+				description: 'Print Debug messages from socket',
+				exec: function (arr) {
+					var settings = JSON.parse(localStorage.getItem("settings"));
+					if (typeof settings.debug === "undefined") {
+						settings.debug = true;
+					} else {
+						settings.debug = !settings.debug;
+					}
+					localStorage.setItem("settings", JSON.stringify(settings));
+					API.chat.log(settings.debug, '<br>Debug mode: ');
+				},
+			},
+			...(config.bugtracker ? {
+				bugs: {
+					description: 'Prints the url for the bug report tracker',
+					aliases: ['bugreport', 'report', 'reportbug'],
+					exec: function (arr) {
+						API.chat.log('<a href="' + config.bugtracker + '" target=_blank>Bug/User Report here</a>');
+					}
+				}
+			} : {}),
+			...(config.themeURL ? {
+				theme: {
+					description: 'Prints the url for the room theme',
+					aliases: ['allowed'],
+					exec: function (arr) {
+						API.chat.log('<a href="' + config.themeURL + '" target=_blank>Allowed themes</a>');
+					}
+				}
+			} : {}),
+			...(config.rulesURL ? {
+				rules: {
+					description: 'Prints the rules for the room',
+					exec: function (arr) {
+						API.chat.log('<a href="' + config.rulesURL + '" target=_blank>Rules</a>');
+					}
+				}
+			} : {}),
 			join: {
 				description: 'Join the DJ queue',
 				aliases: ['j'],
@@ -5246,9 +5284,23 @@
 
 		socket.onmessage = function(e){
 			if ( e.data == 'h') return;
-
+			var count
+			if (typeof count == 'undefined'){
+				count = 0
+			}
 			//DEBUG
+			var settings = JSON.parse(localStorage.getItem("settings"));
+			if (typeof settings.debug === "undefined"){
+                                                settings.debug = false;
+                        }
+			if (settings.debug){
 			console.log(e.data);
+			count +=1
+			}
+			if (count > 500){
+				console.clear()
+				count = 0
+			}
 			//END DEBUG
 
 			var data = null;
@@ -7835,6 +7887,7 @@
 				if (MP.session.roomInfo.bg) { $('#room-bg').css('background-image', 'url('+ MP.session.roomInfo.bg +')'); }
 				$('title').text(data.room.name);
 				$('.modal-bg').remove();
+				$('#loungeframe').attr('src',config.loungeURL);
 
 				var $chat = $('#chat');
 				MP.loadEmoji(false, function(){
