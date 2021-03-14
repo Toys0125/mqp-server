@@ -531,9 +531,6 @@
 			append: function(element, url, imgClickUrl){
 				imgClickUrl = imgClickUrl ? imgClickUrl : url;
 				var settings = JSON.parse(localStorage.getItem("settings"));
-				if (url.indexOf('https://i.mqp.io/sslproxy?') != 0) {
-					url = 'https://i.mqp.io/sslproxy?' + url;
-				}
 				element.append('<span class="image-content" style="color: #79BE6C; cursor: pointer;"><span class="image-toggle" onclick="API.util.toggle_images(\''+escape(url)+'\',\''+escape(imgClickUrl)+'\',this);" style="cursor: pointer;">[Show Image]</span></span> ');
 				element.closest('.cm').addClass('cm-media');
 
@@ -1545,7 +1542,7 @@
                         });
                     },
                     showNotification: function(title, message, iconPath) {
-                        iconPath = iconPath || "https://musiqpad.com/pads/lib/img/icon.png";
+                        iconPath = iconPath || "/pads/lib/img/icon.png";
                         MP.api.util.desktopnotif.getPermission(function(permission) {
                             if (permission !== 'granted') return;
 
@@ -1906,23 +1903,23 @@
 			if(!MP.session.allowemojis) return;
 
 			//Basic
-			$.getJSON("https://raw.githubusercontent.com/Ranks/emojione/2.2.7/emoji.json", function(data) {
+			$.getJSON("https://raw.githubusercontent.com/joypixels/emojione/master/emoji.json", function(data) {
 				for(var e in data){
 					//MP.emotes[e] = MP.emotes[e] || "https://raw.githubusercontent.com/Ranks/emojify.js/master/dist/images/basic/" + e + ".png";
-					MP.emotes["Basic"][e] = MP.emotes["Basic"][e] || { url: "https://raw.githubusercontent.com/Ranks/emojione/master/assets/png/" + data[e].unicode + ".png" };
+					MP.emotes["Basic"][e] = MP.emotes["Basic"][e] || { url: "https://raw.githubusercontent.com/joypixels/emoji-assets/master/png/128/" + e + ".png" };
 
 					//Regular aliases
 					if(data[e].aliases)
-						for(var ee in data[e].aliases){
-							ee = data[e].aliases[ee].slice(1, -1);
+						for(var ee in data[e].shortname){
+							ee = data[e].shortname[ee].slice(1, -1);
 							//MP.emotes[ee] = MP.emotes[ee] || "https://raw.githubusercontent.com/Ranks/emojify.js/master/dist/images/basic/" + e + ".png";
-							MP.emotes["Basic"][ee] = MP.emotes["Basic"][ee] || { url: "https://raw.githubusercontent.com/Ranks/emojione/2.2.7/assets/png/" + data[e].unicode + ".png", style: 'max-width: 24px; max-height: 24px;', };
+							MP.emotes["Basic"][ee] = MP.emotes["Basic"][ee] || { url: "https://raw.githubusercontent.com/joypixels/emoji-assets/master/png/128/" + e + ".png", style: 'max-width: 24px; max-height: 24px;', };
 						}
 
 					//ASCII aliases
-					if(data[e].aliases_ascii)
-						for(var ee in data[e].aliases_ascii)
-							MP.emotes_ascii[data[e].aliases_ascii[ee]] = MP.emotes_ascii[data[e].aliases_ascii[ee]] || e;
+					if(data[e].ascii)
+						for(var ee in data[e].ascii)
+							MP.emotes_ascii[data[e].ascii[ee]] = MP.emotes_ascii[data[e].ascii[ee]] || e;
 				}
 				//Trollface emote
 				var e = 'trollface';
@@ -2179,7 +2176,7 @@
 
                         if(cmd.permission && !MP.checkPerm(cmd.permission)) continue;
 
-						var cmdstr = '/' + key + ' - ' + cmd.description + (cmd.aliases ? ' [ ' + cmd.aliases.join(', ') + ' ]' : '') + '<br>';
+						var cmdstr = '<div style="padding-bottom:5px">'+'/' + key + ' - ' + cmd.description + (cmd.aliases ? ' [ ' + cmd.aliases.join(', ') + ' ]' : '') + '</div>';
 
 						if(cmd.staff)
 							staffcmds += cmdstr;
