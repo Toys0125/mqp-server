@@ -47,6 +47,7 @@ switch (process.argv[2]) {
         daemon.daemon(`${__dirname}/start.js`, '--daemon', {
           stdout: fs.openSync(path.join(process.cwd(), 'log.txt'), 'a'),
           stderr: fs.openSync(path.join(process.cwd(), 'log.txt'), 'a'),
+          cwd: process.cwd()
         });
       }
     });
@@ -71,6 +72,7 @@ switch (process.argv[2]) {
         daemon.daemon(`${__dirname}/start.js`, '--daemon', {
           stdout: fs.openSync(path.join(process.cwd(), 'log.txt'), 'a'),
           stderr: fs.openSync(path.join(process.cwd(), 'log.txt'), 'a'),
+          cwd: process.cwd()
         });
       } else {
         console.log('musiqpad could not be restarted, as a running instance could not be found.');
