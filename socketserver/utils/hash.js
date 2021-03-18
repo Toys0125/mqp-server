@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 	md5(str) {
@@ -11,8 +11,7 @@ module.exports = {
 		return (/[a-fA-F0-9]{32}/).test(hash);
 	},
 	bcrypt(str) {
-		const salt = bcrypt.genSaltSync(12);
-		return bcrypt.hashSync(str, salt);
+		return bcrypt.hashSync(str, 12);
 	},
 	compareBcrypt: bcrypt.compareSync,
 }

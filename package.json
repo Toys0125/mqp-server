@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "basic-logger": "^0.4.4",
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^5.0.1",
     "chalk": "^4.1.0",
     "compression": "^1.7.4",
     "daemon": "^1.1.0",
@@ -40,14 +40,14 @@
     "jsonwebtoken": "^8.5.1",
     "level": "^6.0.1",
     "lodash": "^4.17.21",
-    "mongodb": "^3.6.4",
+    "mongodb": "^3.6.5",
     "mysql": "^2.18.1",
     "nconf": "^0.11.2",
     "nodemailer": "^6.5.0",
     "ps-tree": "^1.2.0",
     "request": "^2.88.2",
     "update-notifier": "^5.1.0",
-    "ws": "^7.4.3",
+    "ws": "^7.4.4",
     "xoauth2": "^1.2.0",
     "yesno": "0.3.1"
   }
