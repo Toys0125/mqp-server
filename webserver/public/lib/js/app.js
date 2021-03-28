@@ -6585,8 +6585,8 @@
 									});
 									MP.api.playlist.import(pid, false, function(err, data){
 										if(err){
-											var errors = ['PlaylistNotFound', 'PlaylistEmpty', 'ConnectionError'];
-											var errmsgs = ['The specified playlist was not found, make sure the playlist exists and is either public ounlisted', 'The playlist you are trying to import is empty', 'Could not connect to YouTube Data APIplease contact the pad owner'];
+											var errors = ['PlaylistNotFound', 'PlaylistEmpty', 'ConnectionError', 'EmailNotConfirmed'];
+											var errmsgs = ['The specified playlist was not found, make sure the playlist exists and is either public ounlisted', 'The playlist you are trying to import is empty', 'Could not connect to YouTube Data APIplease contact the pad owner', 'Your have not confirmed your account yet. Please check your e-mail'];
 											MP.makeAlertModal({
 												content: errmsgs[errors.indexOf(err)],
 											});
