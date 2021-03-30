@@ -10,6 +10,7 @@ const updateNotifier = require('update-notifier');
 const fs = require('fs-extra');
 const nconf = require('nconf');
 const crypto = require('crypto');
+const utils = require('./utils/index');
 
 //Files
 const DB = require("./database");
