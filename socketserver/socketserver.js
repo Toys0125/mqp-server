@@ -234,6 +234,7 @@ var SocketServer = function(server){
 
 	this.wss.on("connection", function(socket, http){
 		var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
+		socket.ip = ip;
 
 		log.info(ip + ' connected');
 
@@ -298,8 +299,6 @@ var SocketServer = function(server){
 		that.unauthdSockets.add(socket);
 
 		socket.on("close", function(){
-			var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
-
 			log.info(ip + ' disconnected');
 			if(socket.user){
 				socket.user.uptime += Date.now() - socket.user.temp_uptime;
@@ -310,8 +309,6 @@ var SocketServer = function(server){
 
 
 		socket.on("message", function(data, flags){
-			var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
-
 			log.debug(ip + " sent: " + data);
 
 			try {
@@ -1357,7 +1354,6 @@ var SocketServer = function(server){
 						}
 						
 						//Log user's IP address
-						var ip = (http.headers['x-forwarded-for'] || http.socket.remoteAddress);
 						DB.logIp(ip, user.uid);
 
 						returnObj.data = {
@@ -2982,7 +2978,7 @@ var SocketServer = function(server){
 
 											for(var i in users)
 												if(users[i].user && (data.data.un ? users[i].user.un : users[i].user.uid) == (data.data.un || data.data.uid))
-													return users[i].upgradeReq.headers['x-forwarded-for'] || users[i].upgradeReq.connection.remoteAddress;
+													return users[i].ip;
 
 											return null;
 										})(),
