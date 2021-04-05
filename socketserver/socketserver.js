@@ -197,6 +197,7 @@ var SocketServer = function(server){
 	}else{
 		var port = nconf.get('socketServer:port') || undefined;
 		var ip = nconf.get('socketServer:host') || undefined;
+		var 
 
 		if (nconf.get('useSSL') && nconf.get('certificate') && nconf.get('certificate:key') && nconf.get('certificate:cert')) {
 			let certificates = {
@@ -1742,6 +1743,12 @@ var SocketServer = function(server){
 					if (cid){
 						searchFunc = YT.getVideo;
 						query = cid;
+					} else if (nconf.get('youtube:disableSearch')){
+						returnObj.data = {
+							error: "SearchDisabled"
+						}
+						socket.sendJSON(returnObj);
+						return;
 					}
 
 					searchFunc(query, function(err, res){
