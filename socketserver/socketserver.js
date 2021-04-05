@@ -198,7 +198,6 @@ var SocketServer = function(server){
 	}else{
 		var port = nconf.get('socketServer:port') || undefined;
 		var ip = nconf.get('socketServer:host') || undefined;
-		var 
 
 		if (nconf.get('useSSL') && nconf.get('certificate') && nconf.get('certificate:key') && nconf.get('certificate:cert')) {
 			let certificates = {
