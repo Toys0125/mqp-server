@@ -208,7 +208,6 @@ var SocketServer = function(server){
 		} else {
 			settings.server = http.createServer().listen(port,ip);
 		}
-		if(nconf.get('apis:YT:disableSearch'))
 	}
 
 	this.wss = new WebSocketServer(settings);
