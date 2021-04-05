@@ -189,7 +189,8 @@ var SocketServer = function(server){
 	}, 5 * 60 * 1000);
 
 	var settings = {
-		autoAcceptConnections : true
+		autoAcceptConnections : true,
+		disableSearch : nconf.get('apis:YT:disableSearch') ? nconf.get('apis:YT:disableSearch') : false
 	};
 
 	if (server){
@@ -197,6 +198,7 @@ var SocketServer = function(server){
 	}else{
 		var port = nconf.get('socketServer:port') || undefined;
 		var ip = nconf.get('socketServer:host') || undefined;
+		var 
 
 		if (nconf.get('useSSL') && nconf.get('certificate') && nconf.get('certificate:key') && nconf.get('certificate:cert')) {
 			let certificates = {
@@ -207,6 +209,7 @@ var SocketServer = function(server){
 		} else {
 			settings.server = http.createServer().listen(port,ip);
 		}
+		if(nconf.get('apis:YT:disableSearch'))
 	}
 
 	this.wss = new WebSocketServer(settings);
@@ -1742,6 +1745,12 @@ var SocketServer = function(server){
 					if (cid){
 						searchFunc = YT.getVideo;
 						query = cid;
+					} else if (settings.disableSearch){
+						returnObj.data = {
+							error: "SearchDisabled"
+						}
+						socket.sendJSON(returnObj);
+						return;
 					}
 
 					searchFunc(query, function(err, res){
